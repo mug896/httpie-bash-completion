@@ -3,14 +3,16 @@ _httpie()
     local CMD=${COMP_WORDS[0]}
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
-    local IFS=$' \t\n' WORDS
-    local VER=$( stat -c %Y `which $CMD` )
+    local IFS=$' \t\n' WORDS TMP
+    local _CMD=_$CMD
+    local VER=$(stat -c %Y `which $CMD`)
 
     if [ "${CUR:0:1}" = "-" ]; then
-        if [ -z "$_httpie" -o "$VER" != "${_httpie%%$'\n'*}" ]; then
-            _httpie=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- '-[[:alnum:]-]+' )
+        if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
+            TMP=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- '-[[:alnum:]-]+' )
+            eval ${_CMD}='$TMP'
         fi
-        WORDS=${_httpie#*$'\n'};
+        WORDS=${!_CMD#*$'\n'};
     elif [ "$PREV" = "--ssl" ]; then
         WORDS="ssl2.3 tls1 tls1.1 tls1.2"
     elif [ "$PREV" = "--auth-type" -o "$PREV" = "-A" ]; then
