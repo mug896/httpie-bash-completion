@@ -30,6 +30,8 @@ _httpie()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
+    elif [ $COMP_CWORD = 1 ]; then
+        WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
     [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
