@@ -3,8 +3,7 @@ _httpie()
     local CMD=${COMP_WORDS[0]}
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
-    local IFS=$' \t\n' WORDS TMP
-    local _CMD=_$CMD
+    local IFS=$' \t\n' WORDS TMP _CMD=_$CMD
     local VER=$(stat -c %Y `which $CMD`)
 
     if [ "${CUR:0:1}" = "-" ]; then
