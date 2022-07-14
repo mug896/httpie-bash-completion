@@ -35,7 +35,7 @@ _httpie()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [ "${CUR:0:1}" != "'" -a "${CUR:0:1}" != '"' ]; then
+    elif [ "$CMD" != "httpie" -a "${CUR:0:1}" != "'" -a "${CUR:0:1}" != '"' ]; then
         WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
