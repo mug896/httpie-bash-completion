@@ -3,6 +3,7 @@ _httpie()
     local CMD=${COMP_WORDS[0]}
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
+    local PREV2=${COMP_WORDS[COMP_CWORD-2]}
     local IFS=$' \t\n' WORDS TMP _CMD=__$CMD
     local VER=$(stat -c %Y `which $CMD`)
 
@@ -30,7 +31,7 @@ _httpie()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ ! "$COMP_LINE" =~ "@" ]]; then
+    elif [ "$PREV2" != "@" ]; then
         WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
