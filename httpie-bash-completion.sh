@@ -17,7 +17,12 @@ _httpie()
     elif [ "$PREV" = "--auth-type" -o "$PREV" = "-A" ]; then
         WORDS="basic bearer digest"
     elif [ "$PREV" = "--print" -o "$PREV" = "-p" ]; then
-        WORDS="H B h b m"
+        IFS=$'\n'
+        WORDS='\"H\" request headers
+\"B\" request body
+\"h\" response headers
+\"b\" response body
+\"m\" response metadata'
     elif [ "$PREV" = "--pretty" ]; then
         WORDS="all colors format none"
     elif [ "$PREV" = "--style" -o "$PREV" = "-s" ]; then
