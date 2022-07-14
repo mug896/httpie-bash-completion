@@ -1,4 +1,4 @@
-_httpie() 
+_http () 
 {
     local CMD=${COMP_WORDS[0]}
     local CUR=${COMP_WORDS[COMP_CWORD]}
@@ -35,12 +35,31 @@ _httpie()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ "$CMD" != "httpie" && ! "${CUR:0:1}" =~ \'|\" ]]; then
+    elif [[ ! "${CUR:0:1}" =~ \'|\" ]]; then
         WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
     [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
 }
 
-complete -o default -o bashdefault -F _httpie http https httpie
+_httpie () 
+{
+    local CUR=${COMP_WORDS[COMP_CWORD]}
+    local IFS=$' \t\n' WORDS
+    local HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
+
+    if [ "${CUR:0:1}" = "-" ]; then
+        WORDS=$( echo "$HELP" | 
+            sed -En '/^options:/,/^END/{ //d; /^  -/p; }' | grep -Eo -- '-[[:alnum:]-]+' )
+    else
+        WORDS=$( echo "$HELP" | 
+            sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)[^}]*$/\1/; s/,|\{|}/ /g; p }' )
+    fi
+
+    COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
+    [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
+}
+
+complete -o default -o bashdefault -F _http http https
+complete -o default -o bashdefault -F _httpie httpie
 
