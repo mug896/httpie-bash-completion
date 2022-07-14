@@ -4,7 +4,7 @@ _httpie()
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
     local IFS=$' \t\n' WORDS TMP _CMD=__$CMD
-    local VER=$(stat -c %Y `which $CMD`)
+    local VER=$(stat -c %Y `type -P "$CMD"`)
 
     if [ "${CUR:0:1}" = "-" ]; then
         if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
