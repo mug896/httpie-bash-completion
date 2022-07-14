@@ -29,3 +29,10 @@ bash$ http -[tab]
 --form               --quiet              -I
 ```
 
+If you want filename completion with `@` character then always use quote first.
+
+```sh
+$ http POST pie.dev/post X-Data:@'[tab]        # use single or double quote.
+
+$ http POST pie.dev/post X-Data:@'foo.txt'
+```
