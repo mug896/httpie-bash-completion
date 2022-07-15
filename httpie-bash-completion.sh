@@ -4,7 +4,7 @@ _http ()
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
     local IFS=$' \t\n' WORDS TMP _CMD=__$CMD
-    local VER=$(stat -c %Y `type -P "$CMD"`)
+    local VER=$(stat -L -c %Y `type -P "$CMD"`)
 
     [ "$PREV" = "=" ] && PREV=${COMP_WORDS[COMP_CWORD-2]}
     if [ "${CUR:0:1}" = "-" ]; then
