@@ -41,7 +41,6 @@ _http ()
     fi
     [ "$CUR" = "=" ] && CUR=""
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
-    [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
 }
 
 _httpie () 
@@ -58,7 +57,6 @@ _httpie ()
             sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)[^}]*$/\1/; s/,|\{|}/ /g; p }' )
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
-    [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
 }
 
 complete -o default -o bashdefault -F _http http https
