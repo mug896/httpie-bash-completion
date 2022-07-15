@@ -45,8 +45,8 @@ _http ()
 _httpie () 
 {
     local CUR=${COMP_WORDS[COMP_CWORD]}
-    local IFS=$' \t\n' WORDS
-    local HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
+    local IFS=$' \t\n' WORDS HELP
+    HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
     if [ "${CUR:0:1}" = "-" ]; then
         WORDS=$( echo "$HELP" | 
