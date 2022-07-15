@@ -6,6 +6,7 @@ _http ()
     local IFS=$' \t\n' WORDS TMP _CMD=__$CMD
     local VER=$(stat -c %Y `type -P "$CMD"`)
 
+    [ "$PREV" = "=" ] && PREV=${COMP_WORDS[COMP_CWORD-2]}
     if [ "${CUR:0:1}" = "-" ]; then
         if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
             TMP=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+' )
@@ -38,6 +39,7 @@ _http ()
     elif [[ ! "${CUR:0:1}" =~ \'|\" ]]; then
         WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
     fi
+    [ "$CUR" = "=" ] && CUR=""
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
     [ "${COMPREPLY: -1}" = "=" ] && compopt -o nospace
 }
