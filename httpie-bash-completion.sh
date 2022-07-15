@@ -9,7 +9,7 @@ _http ()
     [ "$PREV" = "=" ] && PREV=${COMP_WORDS[COMP_CWORD-2]}
     if [ "${CUR:0:1}" = "-" ]; then
         if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
-            TMP=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+' )
+            TMP=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b' )
             eval ${_CMD}='$TMP'
         fi
         WORDS=${!_CMD#*$'\n'};
@@ -51,7 +51,7 @@ _httpie ()
 
     if [ "${CUR:0:1}" = "-" ]; then
         WORDS=$( echo "$HELP" | 
-            sed -En '/^options:/,/^END/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+' )
+            sed -En '/^options:/,/^END/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
         WORDS=$( echo "$HELP" | 
             sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)[^}]*$/\1/; s/,|\{|}/ /g; p }' )
