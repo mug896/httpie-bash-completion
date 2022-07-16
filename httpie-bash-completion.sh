@@ -3,18 +3,18 @@ _http ()
     local CMD=${COMP_WORDS[0]}
     local CUR=${COMP_WORDS[COMP_CWORD]}
     local PREV=${COMP_WORDS[COMP_CWORD-1]}
-    local IFS=$' \t\n' WORDS TMP _CMD=__$CMD
+    local IFS=$' \t\n' WORDS _CMD=__$CMD
     local VER=$(stat -L -c %Y `type -P "$CMD"`)
+    local HELP=${!_CMD#*$'\n'}
 
     [ "$PREV" = "=" ] && PREV=${COMP_WORDS[COMP_CWORD-2]}
     if [ "${CUR:0:1}" = "-" ]; then
         if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
-            TMP=$VER$'\n'$( $CMD --help | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b' )
-            eval ${_CMD}='$TMP'
+            eval ${_CMD}='$VER$'\''\n'\''$( $CMD --help )'
         fi
-        WORDS=${!_CMD#*$'\n'};
+        WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [ "$PREV" = "--ssl" ]; then
-        WORDS="ssl2.3 tls1 tls1.1 tls1.2"
+        WORDS=$(echo "$HELP" | sed -En '/^  --ssl/{ s/^[^{]*(.*)[^}]*$/\1/; s/,|\{|}/ /g; p }')
     elif [ "$PREV" = "--auth-type" -o "$PREV" = "-A" ]; then
         WORDS="basic bearer digest"
     elif [ "$PREV" = "--print" -o "$PREV" = "-p" ]; then
