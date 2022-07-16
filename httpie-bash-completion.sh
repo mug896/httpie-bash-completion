@@ -14,7 +14,7 @@ _http ()
         fi
         WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [ "$PREV" = "--ssl" ]; then
-        WORDS=$(echo "$HELP" | sed -En '/^  --ssl/{ s/^[^{]*([^}]*).*/\1/; s/,|\{/ /g; p }')
+        WORDS=$(echo "$HELP" | sed -En '/^  --ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
     elif [ "$PREV" = "--auth-type" -o "$PREV" = "-A" ]; then
         WORDS="basic bearer digest"
     elif [ "$PREV" = "--print" -o "$PREV" = "-p" ]; then
@@ -54,7 +54,7 @@ _httpie ()
             sed -En '/^options:/,/^END/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
         WORDS=$( echo "$HELP" | 
-            sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*([^}]*).*/\1/; s/,|\{/ /g; p }' )
+            sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }' )
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
 }
