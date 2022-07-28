@@ -10,7 +10,7 @@ _http ()
     [ "$PREV" = "=" ] && PREV=${COMP_WORDS[COMP_CWORD-2]}
     if [ "${CUR:0:1}" = "-" ]; then
         if [ -z "${!_CMD}" -o "$VER" != "${!_CMD%%$'\n'*}" ]; then
-            eval ${_CMD}='$VER$'\''\n'\''$( $CMD --help )'
+            eval ${_CMD}='$VER$'"'\\n'"'$( $CMD --help )'
         fi
         WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [ "$PREV" = "--ssl" ]; then
