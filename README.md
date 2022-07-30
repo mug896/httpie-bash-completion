@@ -29,7 +29,7 @@ bash$ http -[tab]
 --form               --quiet              -I
 ```
 
-If you want filename completion with `@` character then always use quote first.
+If you can not filename completion with `@` character then use quote first.
 
 ```sh
 # use single or double quote for filename completion.
