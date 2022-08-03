@@ -51,7 +51,7 @@ _httpie ()
 
     if [ "${CUR:0:1}" = "-" ]; then
         WORDS=$( echo "$HELP" | 
-            sed -En '/^options:/,/\0/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
+            sed -En '/^options:/,/\a/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
         WORDS=$( echo "$HELP" | 
             sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }' )
