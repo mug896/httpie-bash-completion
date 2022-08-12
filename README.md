@@ -1,7 +1,7 @@
 ## Httpie Bash Completion
 
 Copy contents of `httpie-bash-completion.sh` file to `~/.bash_completion`.  
-open new terminal and try auto completion.
+open new terminal and try auto completion !
 
 
 ```sh
