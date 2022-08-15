@@ -12,7 +12,7 @@ _http ()
         fi
         WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [[ $PREV = --ssl ]]; then
-        WORDS=$(echo "$HELP" | sed -En '/^  --ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
+        WORDS=$(echo "$HELP" | sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
     elif [[ $PREV = @(-A|--auth-type) ]]; then
         WORDS="basic bearer digest"
     elif [[ $PREV = @(-p|--print) ]]; then
