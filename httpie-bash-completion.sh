@@ -5,26 +5,26 @@ _http ()
     local VER=$(stat -L -c %Y `type -P "$CMD"`)
     local HELP=${!_CMD#*$'\n'}
 
-    [[ $PREV = "=" ]] && PREV=${COMP_WORDS[COMP_CWORD-2]}
-    if [[ ${CUR:0:1} = "-" ]]; then
+    [[ $PREV == "=" ]] && PREV=${COMP_WORDS[COMP_CWORD-2]}
+    if [[ ${CUR:0:1} == "-" ]]; then
         if [[ -z ${!_CMD} || $VER != ${!_CMD%%$'\n'*} ]]; then
             eval ${_CMD}='$VER$'"'\\n'"'$( $CMD --help )'
         fi
         WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
-    elif [[ $PREV = --ssl ]]; then
+    elif [[ $PREV == --ssl ]]; then
         WORDS=$(echo "$HELP" | sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
-    elif [[ $PREV = @(-A|--auth-type) ]]; then
+    elif [[ $PREV == @(-A|--auth-type) ]]; then
         WORDS="basic bearer digest"
-    elif [[ $PREV = @(-p|--print) ]]; then
+    elif [[ $PREV == @(-p|--print) ]]; then
         IFS=$'\n'
         WORDS='\"H\" request headers
 \"B\" request body
 \"h\" response headers
 \"b\" response body
 \"m\" response metadata'
-    elif [[ $PREV = --pretty ]]; then
+    elif [[ $PREV == --pretty ]]; then
         WORDS="all colors format none"
-    elif [[ $PREV = @(-s|--style) ]]; then
+    elif [[ $PREV == @(-s|--style) ]]; then
         WORDS="abap algol algol_nu arduino auto autumn borland bw
           colorful default dracula emacs friendly
           friendly_grayscale fruity gruvbox-dark gruvbox-light
@@ -34,7 +34,7 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ $PREV = @(-o|--output) ]]; then
+    elif [[ $PREV == @(-o|--output) ]]; then
         compopt -o filenames
     else
         WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
@@ -48,7 +48,7 @@ _httpie ()
     local IFS=$' \t\n' WORDS HELP
     HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
-    if [ "${CUR:0:1}" = "-" ]; then
+    if [[ ${CUR:0:1} == "-" ]]; then
         WORDS=$( echo "$HELP" | 
             sed -En '/^options:/,/\a/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
