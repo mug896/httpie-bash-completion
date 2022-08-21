@@ -37,7 +37,11 @@ _http ()
     elif [[ $PREV == @(-o|--output) ]]; then
         compopt -o filenames
     else
-        WORDS="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
+        local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
+        for (( i = 1; i < ${#COMP_WORDS[@]}; i++ )); do
+            [[ ${COMP_WORDS[i]} == @(${methods// /|}) ]] && break
+        done
+        (( i == ${#COMP_WORDS[@]} )) && WORDS=$methods
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
 }
