@@ -1,6 +1,7 @@
 _http () 
 {
-    local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=$3
+    local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_POINT[COMP_CWORD-1]}
+    [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && CUR=""
     local IFS=$' \t\n' WORDS _CMD=__$CMD
     local VER=$(stat -L -c %Y `type -P "$CMD"`)
     local HELP=${!_CMD#*$'\n'}
