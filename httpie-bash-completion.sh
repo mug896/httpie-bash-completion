@@ -7,7 +7,7 @@ _http ()
     local HELP=${!_CMD#*$'\n'}
 
     [[ $PREV == "=" ]] && PREV=${COMP_WORDS[COMP_CWORD-2]}
-    if [[ ${CUR:0:1} == "-" ]]; then
+    if [[ $CUR == -* ]]; then
         if [[ -z ${!_CMD} || $VER != ${!_CMD%%$'\n'*} ]]; then
             eval ${_CMD}='$VER$'"'\\n'"'$( $CMD --help )'
         fi
@@ -53,7 +53,7 @@ _httpie ()
     local IFS=$' \t\n' WORDS HELP
     HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
-    if [[ ${CUR:0:1} == "-" ]]; then
+    if [[ $CUR == -* ]]; then
         WORDS=$( echo "$HELP" | 
             sed -En '/^options:/,/\a/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
