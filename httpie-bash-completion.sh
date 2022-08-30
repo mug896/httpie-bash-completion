@@ -35,6 +35,8 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
+    elif [[ $PREV == @(-o|--output) ]]; then
+        :
     else
         local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
         for (( i = 1; i < ${#COMP_WORDS[@]}; i++ )); do
