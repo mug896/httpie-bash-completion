@@ -14,9 +14,9 @@ _http ()
         WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [[ $PREV == --ssl ]]; then
         WORDS=$(echo "$HELP" | sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
-    elif [[ $PREV == @(-A|--auth-type) ]]; then
+    elif [[ $PREV == @(-!(-*)A|--auth-type) ]]; then
         WORDS="basic bearer digest"
-    elif [[ $PREV == @(-p|--print) ]]; then
+    elif [[ $PREV == @(-!(-*)p|--print) ]]; then
         IFS=$'\n'
         WORDS='\"H\" request headers
 \"B\" request body
@@ -25,7 +25,7 @@ _http ()
 \"m\" response metadata'
     elif [[ $PREV == --pretty ]]; then
         WORDS="all colors format none"
-    elif [[ $PREV == @(-s|--style) ]]; then
+    elif [[ $PREV == @(-!(-*)s|--style) ]]; then
         WORDS="abap algol algol_nu arduino auto autumn borland bw
           colorful default dracula emacs friendly
           friendly_grayscale fruity gruvbox-dark gruvbox-light
@@ -35,8 +35,6 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ $PREV == @(-o|--output) ]]; then
-        compopt -o filenames
     else
         local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
         for (( i = 1; i < ${#COMP_WORDS[@]}; i++ )); do
