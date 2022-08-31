@@ -46,6 +46,7 @@ _http ()
         done
         (( i == ${#COMP_WORDS[@]} )) && WORDS=$methods
     fi
+    [[ $CUR == "=" ]] && CUR=""
     COMPREPLY=( $(compgen -W '$WORDS' -- "$CUR") )
 }
 
