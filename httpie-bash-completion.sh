@@ -1,6 +1,6 @@
 _http () 
 {
-    local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_POINT[COMP_CWORD-1]}
+    local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_WORDS[COMP_CWORD-1]}
     [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && CUR=""
     local IFS=$' \t\n' WORDS _CMD=__$CMD
     local VER=$(stat -L -c %Y `type -P "$CMD"`)
@@ -18,11 +18,13 @@ _http ()
         WORDS="basic bearer digest"
     elif [[ $PREV == @(-!(-*)p|--print) ]]; then
         IFS=$'\n'
-        WORDS='\"H\" request headers
-\"B\" request body
-\"h\" response headers
-\"b\" response body
-\"m\" response metadata'
+        WORDS='
+"H" request headers
+"B" request body
+"h" response headers
+"b" response body
+"m" response metadata
+'
     elif [[ $PREV == --pretty ]]; then
         WORDS="all colors format none"
     elif [[ $PREV == @(-!(-*)s|--style) ]]; then
@@ -35,7 +37,7 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-      elif [[ $PREV == @(-!(-*)o|--output) ]]; then
+    elif [[ $PREV == @(-!(-*)o|--output) ]]; then
         :
     else
         local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
@@ -44,7 +46,7 @@ _http ()
         done
         (( i == ${#COMP_WORDS[@]} )) && WORDS=$methods
     fi
-    COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
+    COMPREPLY=( $(compgen -W '$WORDS' -- "$CUR") )
 }
 
 _httpie () 
