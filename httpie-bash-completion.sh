@@ -11,9 +11,9 @@ _http ()
         if [[ -z ${!_CMD} || $VER != ${!_CMD%%$'\n'*} ]]; then
             eval ${_CMD}='$VER$'"'\\n'"'$( $CMD --help )'
         fi
-        WORDS=$(echo "${!_CMD#*$'\n'}" | sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
+        WORDS=$(<<< ${!_CMD#*$'\n'} sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [[ $PREV == --ssl ]]; then
-        WORDS=$(echo "$HELP" | sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
+        WORDS=$(<<< $HELP sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
     elif [[ $PREV == @(-!(-*)A|--auth-type) ]]; then
         WORDS="basic bearer digest"
     elif [[ $PREV == @(-!(-*)p|--print) ]]; then
@@ -57,10 +57,10 @@ _httpie ()
     HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
     if [[ $CUR == -* ]]; then
-        WORDS=$( echo "$HELP" | 
+        WORDS=$( <<< $HELP \
             sed -En '/^options:/,/\a/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
-        WORDS=$( echo "$HELP" | 
+        WORDS=$( <<< $HELP \
             sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }' )
     fi
     COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
