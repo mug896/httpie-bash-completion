@@ -11,6 +11,8 @@ _init_comp_wordbreaks()
 }
 _http () 
 {
+    # It is recommended that every completion function starts with _init_comp_wordbreaks,
+    # whether or not they change the COMP_WORDBREAKS variable afterward.
     _init_comp_wordbreaks
     [[ $COMP_WORDBREAKS != *"@"* ]] && COMP_WORDBREAKS+="@"
     local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_WORDS[COMP_CWORD-1]}
