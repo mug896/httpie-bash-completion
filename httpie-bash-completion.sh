@@ -1,5 +1,18 @@
+_init_comp_wordbreaks()
+{
+    if [[ $PROMPT_COMMAND == *";COMP_WORDBREAKS="* ]]; then
+        [[ $PROMPT_COMMAND =~ ^:\ ([^;]+)\; ]]
+        [[ ${BASH_REMATCH[1]} != ${COMP_WORDS[0]} ]] && eval "${PROMPT_COMMAND%%$'\n'*}"
+    fi
+    if [[ $PROMPT_COMMAND != *";COMP_WORDBREAKS="* ]]; then
+        PROMPT_COMMAND=": ${COMP_WORDS[0]};COMP_WORDBREAKS=${COMP_WORDBREAKS@Q};\
+        "$'PROMPT_COMMAND=${PROMPT_COMMAND#*$\'\\n\'}\n'$PROMPT_COMMAND
+    fi
+}
 _http () 
 {
+    _init_comp_wordbreaks
+    [[ $COMP_WORDBREAKS != *"@"* ]] && COMP_WORDBREAKS+="@"
     local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_WORDS[COMP_CWORD-1]}
     [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && CUR=""
     local IFS=$' \t\n' WORDS _CMD=__$CMD
@@ -37,7 +50,7 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ $PREV == @(-!(-*)o|--output) ]]; then
+    elif [[ $CUR == "@" || $PREV == @(-!(-*)o|--output) ]]; then
         :
     else
         local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
