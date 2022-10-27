@@ -3,7 +3,6 @@
 Copy contents of `httpie-bash-completion.sh` file to `~/.bash_completion`.  
 open new terminal and try auto completion !
 
-> please leave an issue above if you have any problems using this script.
 
 ```sh
 bash$ http --version 
@@ -30,3 +29,4 @@ bash$ http -[tab]
 --form               --quiet              -I
 ```
 
+> please leave an issue above if you have any problems using this script.
