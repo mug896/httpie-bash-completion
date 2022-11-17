@@ -15,35 +15,35 @@ _http ()
     # regardless of whether you change the COMP_WORDBREAKS variable afterward.
     _init_comp_wordbreaks
     [[ $COMP_WORDBREAKS != *"@"* ]] && COMP_WORDBREAKS+="@"
-    local CMD=$1 CUR=${COMP_WORDS[COMP_CWORD]} PREV=${COMP_WORDS[COMP_CWORD-1]}
-    [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && CUR=""
-    local IFS=$' \t\n' WORDS _CMD=__$CMD
-    local VER=$(stat -L -c %Y `type -P "$CMD"`)
-    local HELP=${!_CMD#*$'\n'}
+    local cmd=$1 cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
+    [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && cur=""
+    local IFS=$' \t\n' words _cmd=__$cmd
+    local ver=$(stat -L -c %Y `type -P "$cmd"`)
+    local help=${!_cmd#*$'\n'}
 
-    [[ $PREV == "=" ]] && PREV=${COMP_WORDS[COMP_CWORD-2]}
-    if [[ $CUR == -* ]]; then
-        if [[ -z ${!_CMD} || $VER != ${!_CMD%%$'\n'*} ]]; then
-            eval ${_CMD}='$VER$'"'\\n'"'$( $CMD --help )'
+    [[ $prev == "=" ]] && prev=${COMP_WORDS[COMP_CWORD-2]}
+    if [[ $cur == -* ]]; then
+        if [[ -z ${!_cmd} || $ver != ${!_cmd%%$'\n'*} ]]; then
+            eval ${_cmd}='$ver$'"'\\n'"'$( $cmd --help )'
         fi
-        WORDS=$(<<< ${!_CMD#*$'\n'} sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
-    elif [[ $PREV == --ssl ]]; then
-        WORDS=$(<<< $HELP sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
-    elif [[ $PREV == @(-!(-*)A|--auth-type) ]]; then
-        WORDS="basic bearer digest"
-    elif [[ $PREV == @(-!(-*)p|--print) ]]; then
+        words=$(<<< ${!_cmd#*$'\n'} sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
+    elif [[ $prev == --ssl ]]; then
+        words=$(<<< $help sed -En '/^[ ]{,5}--ssl/{ s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }')
+    elif [[ $prev == @(-!(-*)A|--auth-type) ]]; then
+        words="basic bearer digest"
+    elif [[ $prev == @(-!(-*)p|--print) ]]; then
         IFS=$'\n'
-        WORDS='
+        words='
 "H" request headers
 "B" request body
 "h" response headers
 "b" response body
 "m" response metadata
 '
-    elif [[ $PREV == --pretty ]]; then
-        WORDS="all colors format none"
-    elif [[ $PREV == @(-!(-*)s|--style) ]]; then
-        WORDS="abap algol algol_nu arduino auto autumn borland bw
+    elif [[ $prev == --pretty ]]; then
+        words="all colors format none"
+    elif [[ $prev == @(-!(-*)s|--style) ]]; then
+        words="abap algol algol_nu arduino auto autumn borland bw
           colorful default dracula emacs friendly
           friendly_grayscale fruity gruvbox-dark gruvbox-light
           igor inkpot lilypond lovelace manni material monokai
@@ -52,33 +52,33 @@ _http ()
           rrt sas solarized solarized-dark solarized-light stata
           stata-dark stata-light tango trac vim vs xcode
           zenburn"
-    elif [[ $CUR == "@" || $PREV == @(-!(-*)o|--output) ]]; then
+    elif [[ $cur == "@" || $prev == @(-!(-*)o|--output) ]]; then
         :
     else
         local i methods="GET POST PUT HEAD DELETE PATCH OPTIONS CONNECT TRACE"
         for (( i = 1; i < ${#COMP_WORDS[@]}; i++ )); do
             [[ ${COMP_WORDS[i]} == @(${methods// /|}) ]] && break
         done
-        (( i == ${#COMP_WORDS[@]} )) && WORDS=$methods
+        (( i == ${#COMP_WORDS[@]} )) && words=$methods
     fi
-    [[ $COMP_WORDBREAKS == *$CUR* ]] && CUR=""
-    COMPREPLY=( $(compgen -W '$WORDS' -- "$CUR") )
+    [[ $COMP_WORDBREAKS == *$cur* ]] && cur=""
+    COMPREPLY=( $(compgen -W '$words' -- "$cur") )
 }
 
 _httpie () 
 {
-    local CUR=$2
-    local IFS=$' \t\n' WORDS HELP
+    local cur=$2
+    local IFS=$' \t\n' words help
     HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
-    if [[ $CUR == -* ]]; then
-        WORDS=$( <<< $HELP \
+    if [[ $cur == -* ]]; then
+        words=$( <<< $help \
             sed -En '/^options:/,/\a/{ //d; /^  -/p; }' | grep -Eo -- ' -[[:alnum:]-]+\b' )
     else
-        WORDS=$( <<< $HELP \
+        words=$( <<< $help \
             sed -En '/^positional arguments:/,/^options:/{ //d; s/^[^{]*(.*)}.*/\1/; s/,|\{|}/ /g; p }' )
     fi
-    COMPREPLY=( $(compgen -W "$WORDS" -- "$CUR") )
+    COMPREPLY=( $(compgen -W "$words" -- "$cur") )
 }
 
 complete -o default -o bashdefault -F _http http https
