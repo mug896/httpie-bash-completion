@@ -15,7 +15,7 @@ _http ()
     # regardless of whether you change the COMP_WORDBREAKS variable afterward.
     _init_comp_wordbreaks
     [[ $COMP_WORDBREAKS != *"@"* ]] && COMP_WORDBREAKS+="@"
-    local cmd=${1##*/} cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
+    local cmd=${1##*/} cmd1=$1 cur=${COMP_WORDS[COMP_CWORD]} prev=${COMP_WORDS[COMP_CWORD-1]}
     [[ ${COMP_LINE:COMP_POINT-1:1} = " " ]] && cur=""
     local IFS=$' \t\n' words _cmd=__$cmd
     local ver=$(stat -L -c %Y `type -P "$cmd"`)
@@ -24,7 +24,7 @@ _http ()
     [[ $prev == "=" ]] && prev=${COMP_WORDS[COMP_CWORD-2]}
     if [[ $cur == -* ]]; then
         if [[ -z ${!_cmd} || $ver != ${!_cmd%%$'\n'*} ]]; then
-            eval ${_cmd}='$ver$'"'\\n'"'$( $1 --help )'
+            eval ${_cmd}='$ver$'"'\\n'"'$( $cmd1 --help )'
         fi
         words=$(<<< ${!_cmd#*$'\n'} sed -En '/^  -/p' | grep -Eo -- ' -[[:alnum:]-]+\b')
     elif [[ $prev == --ssl ]]; then
