@@ -69,7 +69,7 @@ _httpie ()
 {
     local cur=$2
     local IFS=$' \t\n' words help
-    HELP=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
+    help=$( eval "${COMP_LINE% *} --help" 2>&1 ) || return;
 
     if [[ $cur == -* ]]; then
         words=$( <<< $help \
